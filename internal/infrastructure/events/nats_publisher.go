@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/nats-io/nats.go"
-	"github.com/yourusername/payment-service/internal/domain"
+	"github.com/hsibAD/payment-service/internal/domain"
 )
 
 const (

@@ -11,7 +11,7 @@ import (
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/charge"
 	"github.com/stripe/stripe-go/v74/refund"
-	"github.com/yourusername/payment-service/internal/domain"
+	"github.com/hsibAD/payment-service/internal/domain"
 )
 
 var (

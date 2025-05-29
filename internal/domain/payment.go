@@ -38,8 +38,8 @@ type Payment struct {
 	UserID        string
 	Amount        float64
 	Currency      string
-	Status        PaymentStatus
-	PaymentMethod PaymentMethod
+	Status        string
+	PaymentMethod string
 	TransactionID string
 	ErrorMessage  string
 	CreatedAt     time.Time
@@ -55,10 +55,10 @@ type CreditCardInfo struct {
 }
 
 type MetaMaskInfo struct {
-	WalletAddress  string
+	WalletAddress   string
 	TransactionHash string
 	ContractAddress string
-	AmountWei      string
+	PaymentData     string
 }
 
 func NewPayment(
@@ -93,15 +93,15 @@ func NewPayment(
 		UserID:        userID,
 		Amount:        amount,
 		Currency:      currency,
-		Status:        PaymentStatusPending,
-		PaymentMethod: method,
+		Status:        string(PaymentStatusPending),
+		PaymentMethod: string(method),
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 	}, nil
 }
 
 func (p *Payment) UpdateStatus(status PaymentStatus) {
-	p.Status = status
+	p.Status = string(status)
 	p.UpdatedAt = time.Now()
 }
 
@@ -112,32 +112,32 @@ func (p *Payment) SetTransactionID(txID string) {
 
 func (p *Payment) SetError(err string) {
 	p.ErrorMessage = err
-	p.Status = PaymentStatusFailed
+	p.Status = string(PaymentStatusFailed)
 	p.UpdatedAt = time.Now()
 }
 
 func (p *Payment) IsCompleted() bool {
-	return p.Status == PaymentStatusCompleted
+	return p.Status == string(PaymentStatusCompleted)
 }
 
 func (p *Payment) IsPending() bool {
-	return p.Status == PaymentStatusPending || p.Status == PaymentStatusProcessing
+	return p.Status == string(PaymentStatusPending) || p.Status == string(PaymentStatusProcessing)
 }
 
 func (p *Payment) CanBeRetried() bool {
-	return p.Status == PaymentStatusFailed || p.Status == PaymentStatusCancelled
+	return p.Status == string(PaymentStatusFailed) || p.Status == string(PaymentStatusCancelled)
 }
 
 func (p *Payment) MarkAsProcessing() {
-	if p.Status == PaymentStatusPending {
-		p.Status = PaymentStatusProcessing
+	if p.Status == string(PaymentStatusPending) {
+		p.Status = string(PaymentStatusProcessing)
 		p.UpdatedAt = time.Now()
 	}
 }
 
 func (p *Payment) MarkAsCompleted(transactionID string) {
 	if p.IsPending() {
-		p.Status = PaymentStatusCompleted
+		p.Status = string(PaymentStatusCompleted)
 		p.TransactionID = transactionID
 		p.UpdatedAt = time.Now()
 	}
@@ -145,17 +145,17 @@ func (p *Payment) MarkAsCompleted(transactionID string) {
 
 func (p *Payment) Cancel() {
 	if p.IsPending() {
-		p.Status = PaymentStatusCancelled
+		p.Status = string(PaymentStatusCancelled)
 		p.UpdatedAt = time.Now()
 	}
 }
 
 func (p *Payment) Refund() error {
-	if p.Status != PaymentStatusCompleted {
+	if p.Status != string(PaymentStatusCompleted) {
 		return errors.New("only completed payments can be refunded")
 	}
 
-	p.Status = PaymentStatusRefunded
+	p.Status = string(PaymentStatusRefunded)
 	p.UpdatedAt = time.Now()
 	return nil
 } 

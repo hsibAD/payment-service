@@ -3,13 +3,14 @@ package blockchain
 import (
 	"context"
 	"errors"
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/yourusername/payment-service/internal/domain"
+	"github.com/hsibAD/payment-service/internal/domain"
 )
 
 var (
